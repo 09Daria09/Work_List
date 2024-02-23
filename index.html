@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Работа со списком</title>
+    <link rel="stylesheet" href="about.css">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+
+</head>
+
+<body>
+    <div class="container">
+        <h2>Управление списком</h2>
+
+        <div>
+            <input type="radio" id="addEnd" name="action" value="addEnd">
+            <label for="addEnd">Добавить элемент списка</label>
+            <input type="text" id="addEndText" placeholder="Текст нового элемента">
+        </div>
+
+        <div>
+            <input type="radio" id="insertAt" name="action" value="insertAt">
+            <label for="insertAt">Вставить элемент списка</label>
+            <input type="text" id="insertText" placeholder="Текст нового элемента">
+        </div>
+
+        <div>
+            <input type="radio" id="changeText" name="action" value="changeText">
+            <label for="changeText">Изменить текст элемента списка</label>
+            <input type="text" id="changeToText" placeholder="Новый текст">
+        </div>
+
+        <div>
+            <input type="radio" id="addNested" name="action" value="addNested">
+            <label for="addNested">Добавить вложенный список</label>
+            <input type="text" id="addNestedElement" placeholder="Новый текст">
+        </div>
+
+        <div>
+            <input type="radio" id="deleteItem" name="action" value="deleteItem">
+            <label for="deleteItem">Удалить элемент списка</label>
+        </div>
+
+        <button type="button" id="actionButton">Добавить новый список</button>
+
+
+
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            document.getElementById('actionButton').addEventListener('click', addNewList);
+        });
+
+        function addNewList() {
+            let ul = document.createElement('ul');
+            ul.className = 'myList';
+            ul.textContent = 'Ваш новый список'
+            document.querySelector('.container').appendChild(ul);
+            ul.addEventListener('click', performAction);
+        }
+
+        function performAction(e) {
+            let selectedAction = document.querySelector('input[name="action"]:checked') ? document.querySelector('input[name="action"]:checked').value : 'addEnd';
+            switch (selectedAction) {
+                case 'addEnd':
+                    addElementToEndOfList(e);
+                    break;
+                case 'insertAt':
+                    insertItemToAt(e);
+                    break;
+                case 'changeText':
+                    changeListItemText(e);
+                    break;
+                case 'addNested':
+                    addNestedList(e);
+                    break;
+                case 'deleteItem':
+                    deleteListItem(e);
+                    break;
+            }
+        }
+
+        function addElementToEndOfList(e) {
+            if (e.target.className === 'myList') {
+                let itemText = document.getElementById('addEndText').value.trim();
+                if (itemText !== '') {
+                    let li = document.createElement('li');
+                    li.textContent = itemText;
+                    e.target.appendChild(li);
+                }
+            }
+        }
+
+        function insertItemToAt(e) {
+            if (e.target && e.target.nodeName === 'LI' && e.target.parentNode.className === 'myList') {
+                let itemText = document.getElementById('insertText').value.trim();
+                if (itemText !== '') {
+                    let li = document.createElement('li');
+                    li.textContent = itemText;
+                    e.target.parentNode.insertBefore(li, e.target);
+                }
+            }
+        }
+
+        function changeListItemText(e) {
+            if (e.target && e.target.nodeName === 'LI' && e.target.parentNode.className === 'myList') {
+                let itemText = document.getElementById('changeToText').value.trim();
+                if (itemText !== '') {
+                    e.target.textContent = itemText;
+                }
+            }
+        }
+        function addNestedList(e) {
+            if (e.target && e.target.nodeName === 'LI') {
+                let itemText = document.getElementById('addNestedElement').value.trim();
+                if (itemText !== '') {
+                    let nestedUl = document.createElement('ul');
+                    nestedUl.className = 'myList';
+                    let nestedLi = document.createElement('li');
+                    nestedLi.textContent = itemText;
+
+                    nestedUl.appendChild(nestedLi);
+                    e.target.appendChild(nestedUl);
+
+                    e.stopPropagation();
+                }
+            }
+        }
+
+        function deleteListItem(e) {
+    if (e.target.nodeName === 'LI') {
+            if (e.target.parentNode.classList.contains('myList')) {
+                e.target.remove(); 
+            }
+        }
+        else if (e.target.classList.contains('myList')) {
+            e.target.remove(); 
+        }
+}
+
+
+
+
+
+
+
+
+    </script>
+
+
+
+
+
+</body>
+
+</html>
